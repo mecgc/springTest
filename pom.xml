@@ -7,6 +7,28 @@
     <groupId>com.cgc.project</groupId>
     <artifactId>spring</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+
+    <properties>
+        <!-- dependency versions -->
+        <servlet.api.version>2.4</servlet.api.version>
+    </properties>
+
+
+    <dependencies>
+
+        <!-- requied start -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${servlet.api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- requied end -->
+
+    </dependencies>
+
 
 
 </project>
