@@ -2,7 +2,10 @@ package com.cgc.demo.mvc.controller;
 
 
 import com.cgc.demo.mvc.service.IDemoService;
-import com.cgc.mvcframework.annotation.*;
+import com.cgc.mvc.framework.annotation.GCAutowired;
+import com.cgc.mvc.framework.annotation.GCController;
+import com.cgc.mvc.framework.annotation.GCRequestMapping;
+import com.cgc.mvc.framework.annotation.GCRequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,7 +15,8 @@ import java.io.IOException;
 @GCRequestMapping("/demo")
 public class DemoAction {
 
-  	@GCAutowired private IDemoService demoService;
+  	@GCAutowired
+	private IDemoService demoService;
 
 	@GCRequestMapping("/query")
 	public void query(HttpServletRequest req, HttpServletResponse resp,

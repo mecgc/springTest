@@ -1,4 +1,4 @@
-package com.cgc.mvcframework.annotation;
+package com.cgc.mvc.framework.annotation;
 
 import java.lang.annotation.*;
 

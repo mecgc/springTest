@@ -1,10 +1,10 @@
-package com.cgc.mvcframework.annotation;
+package com.cgc.mvc.framework.annotation;
 
 import java.lang.annotation.*;
 
-@Target({ElementType.PARAMETER})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface GCRequestParam {
+public @interface GCService {
     String value() default "";
 }

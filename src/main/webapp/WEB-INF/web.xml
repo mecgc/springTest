@@ -4,10 +4,10 @@
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	version="2.4">
-	<display-name>cgc Web Application</display-name>
+	<display-name>CGC Web Application</display-name>
 	<servlet>
 		<servlet-name>cgcmvc</servlet-name>
-		<servlet-class>com.cgc.mvcframework.servlet.GCDispatcherServlet</servlet-class>
+		<servlet-class>com.cgc.mvc.framework.v1.servlet.GCDispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>application.properties</param-value>
