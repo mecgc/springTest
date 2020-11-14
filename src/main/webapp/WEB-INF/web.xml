@@ -7,7 +7,7 @@
 	<display-name>CGC Web Application</display-name>
 	<servlet>
 		<servlet-name>cgcmvc</servlet-name>
-		<servlet-class>com.cgc.mvc.framework.v1.servlet.GCDispatcherServlet</servlet-class>
+		<servlet-class>com.cgc.spring.framework.webmvc.servlet.v1.GCDispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>application.properties</param-value>

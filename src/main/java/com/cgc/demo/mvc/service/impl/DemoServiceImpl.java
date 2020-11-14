@@ -1,7 +1,7 @@
 package com.cgc.demo.mvc.service.impl;
 
 import com.cgc.demo.mvc.service.IDemoService;
-import com.cgc.mvc.framework.annotation.GCService;
+import com.cgc.spring.framework.annotation.GCService;
 
 /**
  * 核心业务逻辑

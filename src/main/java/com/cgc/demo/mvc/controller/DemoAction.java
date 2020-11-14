@@ -2,10 +2,10 @@ package com.cgc.demo.mvc.controller;
 
 
 import com.cgc.demo.mvc.service.IDemoService;
-import com.cgc.mvc.framework.annotation.GCAutowired;
-import com.cgc.mvc.framework.annotation.GCController;
-import com.cgc.mvc.framework.annotation.GCRequestMapping;
-import com.cgc.mvc.framework.annotation.GCRequestParam;
+import com.cgc.spring.framework.annotation.GCAutowired;
+import com.cgc.spring.framework.annotation.GCController;
+import com.cgc.spring.framework.annotation.GCRequestMapping;
+import com.cgc.spring.framework.annotation.GCRequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

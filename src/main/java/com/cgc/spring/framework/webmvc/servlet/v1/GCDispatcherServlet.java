@@ -1,7 +1,7 @@
-package com.cgc.mvc.framework.v1.servlet;
+package com.cgc.spring.framework.webmvc.servlet.v1;
 
 
-import com.cgc.mvc.framework.annotation.*;
+import com.cgc.spring.framework.annotation.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

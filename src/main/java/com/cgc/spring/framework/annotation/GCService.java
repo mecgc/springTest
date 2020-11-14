@@ -1,10 +1,10 @@
-package com.cgc.mvc.framework.annotation;
+package com.cgc.spring.framework.annotation;
 
 import java.lang.annotation.*;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface GCController {
+public @interface GCService {
     String value() default "";
 }
