@@ -27,11 +27,11 @@ public class GCBeanDefinition {
         this.beanClassName = beanClassName;
     }
 
-    public GCBeanDefinition(String beanFactoryName, String beanClassName) {
-        this.factorBeanyName = beanFactoryName;
-        this.beanClassName = beanClassName;
-    }
-
-    public GCBeanDefinition() {
+    @Override
+    public String toString() {
+        return "GCBeanDefinition{" +
+                "factorBeanyName='" + factorBeanyName + '\'' +
+                ", beanClassName='" + beanClassName + '\'' +
+                '}';
     }
 }

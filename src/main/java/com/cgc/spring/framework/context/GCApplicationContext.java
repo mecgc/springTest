@@ -21,7 +21,6 @@ import java.util.Map;
  */
 public class GCApplicationContext {
     private GCBeanDefinitionReader reader;
-    private List<GCBeanDefinition> beanDefinitions;
     private Map<String,GCBeanDefinition> beanDefinitionMap=new HashMap<String, GCBeanDefinition>();
     //保存beanName和实例
     private Map<String,Object> factoryBeanObjectCache = new HashMap<String, Object>();
@@ -32,7 +31,7 @@ public class GCApplicationContext {
             //1.加载配置文件
             reader=new GCBeanDefinitionReader(configLocations);
             //2、解析配置文件，并生成beanDefinition对象
-            beanDefinitions=reader.loadBaenDefinitions();
+            List<GCBeanDefinition>  beanDefinitions=reader.loadBaenDefinitions();
             //3.将beanDefinition缓存起来
             doRegistBeanDefinition(beanDefinitions);
             doAutowrited();
@@ -66,8 +65,13 @@ public class GCApplicationContext {
         GCBeanDefinition beanDefinition = this.beanDefinitionMap.get(beanName);
         //2、反射实例化newInstance();
         Object instance = instantiateBean(beanName,beanDefinition);
+        if (instance==null){
+            System.out.println(beanDefinition);
+            return null;
+        }
         //3、封装成一个叫做BeanWrapper
         GCBeanWrapper beanWrapper = new GCBeanWrapper(instance);
+
         //4、保存到IoC容器
         factoryBeanInstanceCache.put(beanName,beanWrapper);
         //5、执行依赖注入
@@ -126,14 +130,45 @@ public class GCApplicationContext {
     private Object instantiateBean(String beanName, GCBeanDefinition beanDefinition) {
         String className = beanDefinition.getBeanClassName();
         Object instance = null;
-        try {
-            Class<?> clazz = Class.forName(className);
-            //2、默认的类名首字母小写
-            instance = clazz.newInstance();
-            this.factoryBeanObjectCache.put(beanName, instance);
-        }catch (Exception e){
-            e.printStackTrace();
+        if(this.factoryBeanObjectCache.containsKey(beanName)){
+            instance=factoryBeanObjectCache.get(beanName);
+        }else {
+            try {
+                Class<?> clazz = Class.forName(className);
+                if(clazz.isAnnotationPresent(GCController.class)) {
+                    //2、默认的类名首字母小写
+                    instance = clazz.newInstance();
+                    this.factoryBeanObjectCache.put(beanName, instance);
+                }else if(clazz.isAnnotationPresent(GCService.class)){
+                    GCService service = clazz.getAnnotation(GCService.class);
+                    if(!"".equals(service.value())){
+                        beanName = service.value();
+                    }
+                    instance = clazz.newInstance();
+                    this.factoryBeanObjectCache.put(beanName, instance);
+                    //3、根据类型注入实现类，投机取巧的方式
+                    //getInterfaces()方法和Java的反射机制有关。它能够获得这个对象所实现的接口
+                    for (Class<?> i : clazz.getInterfaces()) {
+                        this.factoryBeanObjectCache.put(i.getName(),instance);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return instance;
+    }
+
+    public int getBeanDefinitionCount() {
+        return this.beanDefinitionMap.size();
+    }
+
+    public String[] getBeanDefinitionNames() {
+        return this.beanDefinitionMap.keySet().toArray(new String[this.beanDefinitionMap.size()]);
+    }
+    private String toLowerFirstCase(String simpleName) {
+        char[] chars = simpleName.toCharArray();
+        chars[0] += 32;
+        return String.valueOf(chars);
     }
 }

@@ -25,9 +25,6 @@ public class GCDispatcherServlet extends HttpServlet {
     private Properties contextConfig = new Properties();
 
     GCApplicationContext applicationContext;
-    //IOC容器，保存所有实例化对象
-    //注册式单例模式
-    private Map<String, Object> ioc = new HashMap<String, Object>();
     //保存Contrller中所有Mapping的对应关系
 
     private Map<String, Method> handlerMapping = new HashMap<String, Method>();
@@ -102,11 +99,11 @@ public class GCDispatcherServlet extends HttpServlet {
         //通过反射拿到method所在class，拿到class之后还是拿到class的名称
         //再调用toLowerFirstCase获得beanName
         String beanName = toLowerFirstCase(method.getDeclaringClass().getSimpleName());
-        method.invoke(ioc.get(beanName), paramValues);
+        method.invoke(applicationContext.getBean(beanName), paramValues);
     }
 
     @Override
-    public void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) {
 
         //初始化Spring核心IoC容器
         applicationContext = new GCApplicationContext(config.getInitParameter("contextConfigLocation"));
@@ -117,12 +114,16 @@ public class GCDispatcherServlet extends HttpServlet {
     }
 
     private void initHandlerMapping() {
-        if (ioc.isEmpty()) {
+        if (applicationContext.getBeanDefinitionCount()==0) {
             return;
         }
 
-        for (Map.Entry<String, Object> entry : ioc.entrySet()) {
-            Class<?> clazz = entry.getValue().getClass();
+        for (String beanName : this.applicationContext.getBeanDefinitionNames()) {
+            if (applicationContext.getBean(beanName)==null){
+                continue;
+            }
+            Class<?> clazz = applicationContext.getBean(beanName).getClass();
+
             if (!clazz.isAnnotationPresent(GCController.class)) {
                 continue;
             }

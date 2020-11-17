@@ -1,5 +1,6 @@
 package com.cgc.spring.framework.beans.support;
 
+import com.cgc.spring.framework.annotation.GCController;
 import com.cgc.spring.framework.annotation.GCService;
 import com.cgc.spring.framework.beans.config.GCBeanDefinition;
 
@@ -71,19 +72,21 @@ public class GCBeanDefinitionReader {
         try {
             for (String className : registryBeanClass) {
                 Class<?> beanClass = Class.forName(className);
-
-                //保存类对应的ClassName（全类名）
-                //还有beanName
-                //1、默认是类名首字母小写
-                result.add(new GCBeanDefinition(toLowerFirstCase(beanClass.getSimpleName()), beanClass.getName()));
-                //2、自定义
+                if(beanClass.isInterface()){continue;}
+                if(beanClass.isAnnotationPresent(GCService.class)||beanClass.isAnnotationPresent(GCController.class)) {
+                    //保存类对应的ClassName（全类名）
+                    //还有beanName
+                    //1、默认是类名首字母小写
+                    result.add(doCreateBeanDefinition(toLowerFirstCase(beanClass.getSimpleName()), beanClass.getName()));
+                    //2、自定义
                /* GCService service = beanClass.getAnnotation(GCService.class);
                 if(!"".equals(service.value())){
                     beanName = service.value();
                 }*/
-                //3、接口注入
-                for (Class<?> i : beanClass.getInterfaces()) {
-                    result.add(new GCBeanDefinition(i.getName(),beanClass.getName()));
+                    //3、接口注入
+                    for (Class<?> i : beanClass.getInterfaces()) {
+                        result.add(doCreateBeanDefinition(i.getName(), beanClass.getName()));
+                    }
                 }
 
             }
@@ -92,6 +95,13 @@ public class GCBeanDefinitionReader {
         }
 
         return result;
+    }
+
+    private GCBeanDefinition doCreateBeanDefinition(String beanFactoryName, String beanClassName) {
+        GCBeanDefinition beanDefinition = new GCBeanDefinition();
+        beanDefinition.setFactorBeanyName(beanFactoryName);
+        beanDefinition.setBeanClassName(beanClassName);
+        return beanDefinition;
     }
 
     private String toLowerFirstCase(String simpleName) {
