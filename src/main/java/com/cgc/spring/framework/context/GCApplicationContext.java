@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Description: <br/>
@@ -170,5 +171,9 @@ public class GCApplicationContext {
         char[] chars = simpleName.toCharArray();
         chars[0] += 32;
         return String.valueOf(chars);
+    }
+
+    public Properties getConfig() {
+        return this.reader.getConfig();
     }
 }

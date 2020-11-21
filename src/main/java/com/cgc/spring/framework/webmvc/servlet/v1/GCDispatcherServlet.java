@@ -87,6 +87,9 @@ public class GCDispatcherServlet extends HttpServlet {
         //保存请求的url参数列表
         //第一个参数：方法所在的实例
         //第二个参数：调用时所需要的实参
+        //例如：request中的参数t1=1&t1=2&t2=3形成的map结构：
+        //key=t1;value[0]=1,value[1]=2
+        //key=t2;value[0]=3
         Map<String,String[]> parameterMap = req.getParameterMap();
         //保存赋值参数的位置
         Object [] paramValues = new Object[parameterTypes.length];
