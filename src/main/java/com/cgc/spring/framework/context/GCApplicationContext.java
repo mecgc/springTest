@@ -3,6 +3,9 @@ package com.cgc.spring.framework.context;
 import com.cgc.spring.framework.annotation.GCAutowired;
 import com.cgc.spring.framework.annotation.GCController;
 import com.cgc.spring.framework.annotation.GCService;
+import com.cgc.spring.framework.aop.GCJdkDynamicAopProxy;
+import com.cgc.spring.framework.aop.config.GCAopConfig;
+import com.cgc.spring.framework.aop.support.GCAdvisedSupport;
 import com.cgc.spring.framework.beans.GCBeanWrapper;
 import com.cgc.spring.framework.beans.config.GCBeanDefinition;
 import com.cgc.spring.framework.beans.support.GCBeanDefinitionReader;
@@ -146,6 +149,21 @@ public class GCApplicationContext {
                         beanName = service.value();
                     }
                     instance = clazz.newInstance();
+
+                    //==================AOP开始=========================
+                    //如果满足条件，就直接返回Proxy对象
+                    //1、加载AOP的配置文件
+                    GCAdvisedSupport config = instantionAopConfig(beanDefinition);
+                    config.setTargetClass(clazz);
+                    config.setTarget(instance);
+
+                    //判断规则，要不要生成代理类，如果要就覆盖原生对象
+                    //如果不要就不做任何处理，返回原生对象
+                    if(config.pointCutMath()){
+                        instance = new GCJdkDynamicAopProxy(config).getProxy();
+                    }
+
+                    //===================AOP结束========================
                     this.factoryBeanObjectCache.put(beanName, instance);
                     //3、根据类型注入实现类，投机取巧的方式
                     //getInterfaces()方法和Java的反射机制有关。它能够获得这个对象所实现的接口
@@ -159,6 +177,17 @@ public class GCApplicationContext {
         }
         return instance;
     }
+    //读取aop配置文件生成AopConfig，传入配置支持类
+    private GCAdvisedSupport instantionAopConfig(GCBeanDefinition beanDefinition) {
+        GCAopConfig config=new GCAopConfig();
+        config.setPointCut(this.reader.getConfig().getProperty("pointCut"));
+        config.setAspectClass(this.reader.getConfig().getProperty("aspectClass"));
+        config.setAspectBefore(this.reader.getConfig().getProperty("aspectBefore"));
+        config.setAspectAfter(this.reader.getConfig().getProperty("aspectAfter"));
+        config.setAspectAfterThrow(this.reader.getConfig().getProperty("aspectAfterThrow"));
+        config.setAspectAfterThrowingName(this.reader.getConfig().getProperty("aspectAfterThrowingName"));
+        return new GCAdvisedSupport(config);
+    }
 
     public int getBeanDefinitionCount() {
         return this.beanDefinitionMap.size();
@@ -166,11 +195,6 @@ public class GCApplicationContext {
 
     public String[] getBeanDefinitionNames() {
         return this.beanDefinitionMap.keySet().toArray(new String[this.beanDefinitionMap.size()]);
-    }
-    private String toLowerFirstCase(String simpleName) {
-        char[] chars = simpleName.toCharArray();
-        chars[0] += 32;
-        return String.valueOf(chars);
     }
 
     public Properties getConfig() {

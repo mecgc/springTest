@@ -13,7 +13,7 @@ import java.util.Date;
  *
  */
 @GCService
-public class QueryService implements IQueryService {
+public class QueryServiceImpl implements IQueryService {
 
 	/**
 	 * 查询
@@ -21,6 +21,7 @@ public class QueryService implements IQueryService {
 	public String query(String name) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String time = sdf.format(new Date());
+		int i=8/0;
 		String json = "{name:\"" + name + "\",time:\"" + time + "\"}";
 		return json;
 	}
